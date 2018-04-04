@@ -64,12 +64,15 @@ export class RenderManager {
   * @param {THREE.Camera} activeCamera current active camera from CameraManager
   * @memberof RenderManager
   */
-  public render(scene: THREE.Scene, camera: THREE.Camera): void {
+  public render(scene?: THREE.Scene, camera?: THREE.Camera): void {
     if (scene && camera) {
 
       // reference the scene and camera for render loop
       this.activeScene = scene;
       this.activeCamera = camera;
+    }
+    
+    if (this.activeCamera && this.activeScene) {
 
       // stop the render loop - sometimes stopping the render and re starting the render picks up changes better
       this.stopRenderLoop();

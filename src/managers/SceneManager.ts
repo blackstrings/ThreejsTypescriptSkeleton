@@ -10,9 +10,12 @@ export class SceneManager {
   private activeScene: THREE.Scene = null;
   private grid: Grid = null;
   public children: THREE.Object3D[];
+  
+  private shapes: Shape[] = [];
 
   constructor() {
     this.activeScene = new THREE.Scene();
+    console.error(`active scene ready of id: ${this.activeScene.id}`);
     this.children = this.activeScene.children;
     this.showGrid();
     this.showAxisHelper();
@@ -51,6 +54,7 @@ export class SceneManager {
   //TODO allow add any type of shape
   public addToScene(shape: Shape): void {
     if (shape && this.activeScene) {
+      this.shapes.push(shape);
       this.activeScene.add(shape.mesh);
     } else {
       console.warn('fail to add to sceen, shape or activeScene is null');
@@ -93,10 +97,18 @@ export class SceneManager {
         [0, 0], [0, 12], [6, 18], [12, 12], [12, 0]
       ];
       const s: Shape2D = new Shape2D(points);
+      s.mesh.position.x = this.children.length * 10;
       this.addToScene(s);
 
     } else {
       console.warn('activeScene is null');
+    }
+  }
+  
+  public removeLastShape(): void {
+    if (this.shapes && this.activeScene) {
+      const shapeToRemove: Shape = this.shapes[this.shapes.length-1];
+      this.removeFromScene(shapeToRemove);
     }
   }
 

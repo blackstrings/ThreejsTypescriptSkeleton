@@ -47,7 +47,7 @@ export class MainManager {
       this.slotManager = new SlotManager();
       
       // after init
-      this.operation = new Operation(this.sceneManager);
+      this.operation = new Operation(this.sceneManager, this.renderManager);
       this.uiManager = new UIManager(uiDom, this.operation);
       const debug: Debug = new Debug(true);
 

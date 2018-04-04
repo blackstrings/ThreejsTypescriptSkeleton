@@ -39,11 +39,17 @@ export class UIManager {
     this.addPanel(panel);
     
     // button
-    const createNewShapeBtn: Button = new Button('btn', 'New Shape');
-    createNewShapeBtn.dom.addEventListener('click', () => {
+    let btn: Button = new Button('btn', 'New Shape');
+    panel.add(btn);
+    btn.dom.addEventListener('click', () => {
       this.operation.createShape();
     });
-    panel.add(createNewShapeBtn);
+    
+    btn = new Button('btn', 'Remove Last Shape');
+    panel.add(btn);
+    btn.dom.addEventListener('click', () => {
+      this.operation.removeLastShape();
+    });
     
   }
   
