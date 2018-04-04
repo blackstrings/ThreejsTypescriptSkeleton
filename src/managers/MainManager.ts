@@ -7,6 +7,7 @@ import { SelectionManager } from './SelectionManager';
 import { Debug } from '../utils/Debug';
 import { Mouse } from '../UI/Mouse';
 import { UIManager } from './UIManager';
+import { EventManager } from './EventManager';
 
 /**
  * Inits all the managers and oversees all managers.
@@ -22,6 +23,7 @@ export class MainManager {
   private renderManager: RenderManager;
   private cameraManager: CameraManager;
   private uiManager: UIManager;
+  private eventManager: EventManager;
 
   private selectionManager: SelectionManager;
   private mouse: Mouse;
@@ -43,6 +45,8 @@ export class MainManager {
       this.selectionManager = new SelectionManager(this.canvasManager, this.cameraManager, this.sceneManager, this.mouse);
       
       this.slotManager = new SlotManager();
+      
+      this.eventManager = new EventManager();
       
       // after init
       const debug: Debug = new Debug(true);

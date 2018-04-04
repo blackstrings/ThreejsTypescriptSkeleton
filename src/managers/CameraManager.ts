@@ -5,7 +5,7 @@ let OrbitControls = OrbitControlsFactory(THREE);
 
 import { CanvasManager } from './CanvasManager';
 import { Debug } from '../utils/Debug';
-import { Subscription } from '../events/Subscription';
+import { Subscriptions } from '../events/Subscriptions';
 
 export class CameraManager {
 
@@ -33,11 +33,11 @@ export class CameraManager {
     // subscriptions
     
     // create orbital controls once when renderer.domElement is setup and ready
-    Subscription.rendererSetupComplete.subscribe((dom: HTMLElement) => {
+    Subscriptions.rendererSetupComplete.subscribe((dom: HTMLElement) => {
       this.renderDomElement = dom;
     });
     
-    Subscription.debugSetupComplete.subscribe((debug: Debug) => {
+    Subscriptions.debugSetupComplete.subscribe((debug: Debug) => {
       this.debug = debug;
     });
     

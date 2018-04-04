@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { CanvasManager } from '../managers/CanvasManager';
 import { CameraManager } from '../managers/CameraManager';
 import { Debug } from '../utils/Debug';
-import { Subscription } from '../events/Subscription';
+import { Subscriptions } from '../events/Subscriptions';
 
 /**
  * Manage mouse features which include position tracking.
@@ -63,7 +63,7 @@ export class Mouse {
     }, false);
     
     // subscription
-    Subscription.debugSetupComplete.subscribe((debug: Debug) => {
+    Subscriptions.debugSetupComplete.subscribe((debug: Debug) => {
       this.debug = debug;
     });
   }

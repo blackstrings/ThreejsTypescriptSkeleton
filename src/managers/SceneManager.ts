@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import { Grid } from '../UI/Grid';
 import { Shape2D } from '../components/shapes/Shape2D';
-import { Subscription } from '../events/Subscription';
+import { Subscriptions } from '../events/Subscriptions';
 
 export class SceneManager {
 
@@ -18,7 +18,7 @@ export class SceneManager {
     this.testScene();
     
     // TODO: remove this working subscription test with rxjs
-    Subscription.selectedObjectId.subscribe((id: number) => {
+    Subscriptions.selectedObjectId.subscribe((id: number) => {
       console.error('id is: ' + id);
     });
   }

@@ -8,7 +8,7 @@ import { SceneManager } from '../managers/SceneManager';
 import { Mouse } from '../UI/Mouse';
 import { Debug } from '../utils/Debug';
 import { VectorUtils } from '../utils/VectorUtils';
-import { Subscription } from '../events/Subscription';
+import { Subscriptions } from '../events/Subscriptions';
 
 /**
  * The SelectionManager class, a wrapper around THREE.Raycaster, is used for capturing mouse events in
@@ -101,7 +101,7 @@ export class SelectionManager {
     this.canvasManager.rendererDomParent.addEventListener('mousedown', (e) => { this.onMouseDown(e); }, false);
     this.canvasManager.rendererDomParent.addEventListener('touchstart', (e) => { this.onMouseDown(e); }, false);
     
-    Subscription.debugSetupComplete.subscribe((debug: Debug) => {
+    Subscriptions.debugSetupComplete.subscribe((debug: Debug) => {
       this.debug = debug;
     });
     
