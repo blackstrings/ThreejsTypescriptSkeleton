@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 import { VectorUtils } from '../../utils/VectorUtils';
+import { Shape } from '../shapes/Shape';
 
 /**
  * Contains thet shape information such as position and shape vertices for 2d
@@ -8,7 +9,7 @@ import { VectorUtils } from '../../utils/VectorUtils';
  * @export
  * @class Shape
  */
-export class Shape2D {
+export class Shape2D extends Shape{
 
   /**
    * contains 2d points
@@ -21,6 +22,7 @@ export class Shape2D {
   public mesh: THREE.Mesh = null;
 
   constructor(points: Array<ArrayLike<number>>) {
+    super();
     try {
       this.points = VectorUtils.convertArrayToVec3s(points);
       this.create();

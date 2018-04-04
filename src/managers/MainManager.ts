@@ -7,7 +7,7 @@ import { SelectionManager } from './SelectionManager';
 import { Debug } from '../utils/Debug';
 import { Mouse } from '../UI/Mouse';
 import { UIManager } from './UIManager';
-import { EventManager } from './EventManager';
+import { Operation } from '../services/Operation';
 
 /**
  * Inits all the managers and oversees all managers.
@@ -23,7 +23,7 @@ export class MainManager {
   private renderManager: RenderManager;
   private cameraManager: CameraManager;
   private uiManager: UIManager;
-  private eventManager: EventManager;
+  private operation: Operation;
 
   private selectionManager: SelectionManager;
   private mouse: Mouse;
@@ -31,10 +31,10 @@ export class MainManager {
   constructor(dom: HTMLElement, uiDom:HTMLElement) {
 
     try {
-
+      
+      
       // pre init
       this.sceneManager = new SceneManager();
-      this.uiManager = new UIManager(uiDom);
       this.canvasManager = new CanvasManager(dom);
       this.cameraManager = new CameraManager(this.canvasManager);
       
@@ -46,9 +46,9 @@ export class MainManager {
       
       this.slotManager = new SlotManager();
       
-      this.eventManager = new EventManager();
-      
       // after init
+      this.operation = new Operation(this.sceneManager);
+      this.uiManager = new UIManager(uiDom, this.operation);
       const debug: Debug = new Debug(true);
 
       debug.init().then((value: boolean) => {

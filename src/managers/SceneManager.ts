@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { Grid } from '../UI/Grid';
 import { Shape2D } from '../components/shapes/Shape2D';
 import { Subscriptions } from '../events/Subscriptions';
+import { Shape } from '../components/shapes/Shape';
 
 export class SceneManager {
 
@@ -16,7 +17,7 @@ export class SceneManager {
     this.showGrid();
     this.showAxisHelper();
     this.testScene();
-    
+
     // TODO: remove this working subscription test with rxjs
     Subscriptions.selectedObjectId.subscribe((id: number) => {
       console.error('id is: ' + id);
@@ -46,27 +47,74 @@ export class SceneManager {
     this.activeScene.add(axis);
   }
 
+
+  //TODO allow add any type of shape
+  public addToScene(shape: Shape): void {
+    if (shape && this.activeScene) {
+      this.activeScene.add(shape.mesh);
+    } else {
+      console.warn('fail to add to sceen, shape or activeScene is null');
+    }
+  }
+
+  public removeFromScene(shape: Shape, id?: number): void {
+    const prefix: string = 'failed to remove from scene,';
+    let shapeToRemove: THREE.Object3D = null;
+    if (this.activeScene) {
+
+      if (shape) {  // by shape
+
+        shapeToRemove = shape.mesh;
+
+      } else if (id => 0) { // by id
+        const objs: THREE.Object3D[] = this.children.filter(obj => obj.id === id);
+        if (objs && objs.length) {
+          shapeToRemove = objs[0];
+        } else {
+          console.warn(`${prefix} no obj found for id: ${id}`);
+        }
+      } else {
+        console.warn(`${prefix} shape is null`);
+      }
+
+      if (shapeToRemove) {
+        this.activeScene.remove(shapeToRemove);
+      }
+    } else {
+      console.warn(`${prefix} activeScene is null`);
+    }
+  }
+
+  public createShape(): void {
+    if (this.activeScene) {
+
+      // test
+      const points: number[][] = [
+        [0, 0], [0, 12], [6, 18], [12, 12], [12, 0]
+      ];
+      const s: Shape2D = new Shape2D(points);
+      this.addToScene(s);
+
+    } else {
+      console.warn('activeScene is null');
+    }
+  }
+
   private testScene(): void {
     const mat: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: .6 });
-    
-    // sphere
-    const sGeo: THREE.SphereGeometry = new THREE.SphereGeometry(5);
-    const sphereMesh: THREE.Mesh = new THREE.Mesh(sGeo, mat);
-    sphereMesh.name = 'sphere';
-    this.activeScene.add(sphereMesh);
-    
-    // cube
-    const cubeGeo: THREE.CubeGeometry = new THREE.CubeGeometry(12, 2, 12);
-    const cubeMesh: THREE.Mesh = new THREE.Mesh(cubeGeo, mat);
-    this.activeScene.add(cubeMesh);
-    cubeMesh.name = 'cube';
 
-    // custom mesh
-    const points: number[][] = [
-      [0, 0], [0, 12], [6, 18], [12, 12], [12, 0]
-    ];
-    const s: Shape2D = new Shape2D(points);
-    this.activeScene.add(s.mesh);
+    // sphere
+    // const sGeo: THREE.SphereGeometry = new THREE.SphereGeometry(5);
+    // const sphereMesh: THREE.Mesh = new THREE.Mesh(sGeo, mat);
+    // sphereMesh.name = 'sphere';
+    // this.activeScene.add(sphereMesh);
+
+    // // cube
+    // const cubeGeo: THREE.CubeGeometry = new THREE.CubeGeometry(12, 2, 12);
+    // const cubeMesh: THREE.Mesh = new THREE.Mesh(cubeGeo, mat);
+    // this.activeScene.add(cubeMesh);
+    // cubeMesh.name = 'cube';
+
   }
 
   public getActiveScene(): THREE.Scene {

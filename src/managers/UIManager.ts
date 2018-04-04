@@ -1,5 +1,10 @@
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Observable } from 'rxjs/Observable';
+
 import { Panel } from '../UI/Panel';
 import { Button } from '../UI/Button';
+import { Subscriptions } from '../events/Subscriptions';
+import { Operation } from '../services/Operation';
 
 /**
  * Handles the button GUI for interacting with the canvas.
@@ -12,7 +17,10 @@ export class UIManager {
   private panels: Panel[] = [];
   private dom: HTMLElement = null;
   
-  constructor(uiDom: HTMLElement) {
+  public static createNewShapePub: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
+  
+  
+  constructor(uiDom: HTMLElement, private operation: Operation) {
     if (uiDom) {
       this.dom = document.createElement('div');
       this.dom.className = 'uiMain';
@@ -31,11 +39,11 @@ export class UIManager {
     this.addPanel(panel);
     
     // button
-    const newBtn: Button = new Button('btn', 'New Shape');
-    newBtn.dom.addEventListener('click', function(){
-      console.log("click");
+    const createNewShapeBtn: Button = new Button('btn', 'New Shape');
+    createNewShapeBtn.dom.addEventListener('click', () => {
+      this.operation.createShape();
     });
-    panel.add(newBtn);
+    panel.add(createNewShapeBtn);
     
   }
   
