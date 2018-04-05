@@ -15,6 +15,6 @@ export class Operation {
   
   public removeLastShape(): void {
     this.sceneManager.removeLastShape();
-    //this.renderManager.render();
+    //this.renderManager.render();  // shold not need this
   }
 }

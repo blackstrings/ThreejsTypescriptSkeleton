@@ -10,7 +10,7 @@ export class SceneManager {
   private activeScene: THREE.Scene = null;
   private grid: Grid = null;
   public children: THREE.Object3D[];
-  
+
   private shapes: Shape[] = [];
 
   constructor() {
@@ -54,13 +54,19 @@ export class SceneManager {
   //TODO allow add any type of shape
   public addToScene(shape: Shape): void {
     if (shape && this.activeScene) {
-      this.shapes.push(shape);
       this.activeScene.add(shape.mesh);
     } else {
       console.warn('fail to add to sceen, shape or activeScene is null');
     }
   }
 
+  /**
+   * Handles removing the shape.mesh from the scene only, not the shape itself.
+   * 
+   * @param {Shape} shape 
+   * @param {number} [id] 
+   * @memberof SceneManager
+   */
   public removeFromScene(shape: Shape, id?: number): void {
     const prefix: string = 'failed to remove from scene,';
     let shapeToRemove: THREE.Object3D = null;
@@ -98,17 +104,20 @@ export class SceneManager {
       ];
       const s: Shape2D = new Shape2D(points);
       s.mesh.position.x = this.children.length * 10;
+      this.shapes.push(s);
       this.addToScene(s);
 
     } else {
       console.warn('activeScene is null');
     }
   }
-  
+
   public removeLastShape(): void {
-    if (this.shapes && this.activeScene) {
-      const shapeToRemove: Shape = this.shapes[this.shapes.length-1];
+    if (this.shapes && this.shapes.length && this.activeScene) {
+      const shapeToRemove: Shape = this.shapes.pop();
       this.removeFromScene(shapeToRemove);
+    } else {
+      console.warn('failed to remove last shape, shapes or activeScene is null');
     }
   }
 
