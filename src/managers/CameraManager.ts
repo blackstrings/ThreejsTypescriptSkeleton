@@ -128,7 +128,7 @@ export class CameraManager {
 
       // restrict ortho cameras from rotating
       if (this.activeCamera instanceof THREE.OrthographicCamera) {
-        if (this.debug && this.debug.enabled) {
+        if (this.debug && this.debug.enabled && this.debug.forceEnableCameraRotation) {
           console.warn(this.debug.message + 'rotation for orthographic camera is turned on');
           this.orbitControls.enableRotate = true;
         } else {

@@ -4,6 +4,7 @@ import { Grid } from '../UI/Grid';
 import { Shape2D } from '../components/shapes/Shape2D';
 import { Subscriptions } from '../events/Subscriptions';
 import { Shape } from '../components/shapes/Shape';
+import { VectorUtils } from '../utils/VectorUtils';
 
 export class SceneManager {
 
@@ -12,6 +13,9 @@ export class SceneManager {
   public children: THREE.Object3D[];
 
   private shapes: Shape[] = [];
+
+  private isCustomDrawEnabled: boolean = false;
+  private newCustomShapePoints: THREE.Vector3[] = [];
 
   constructor() {
     this.activeScene = new THREE.Scene();
@@ -24,6 +28,11 @@ export class SceneManager {
     // TODO: remove this working subscription test with rxjs
     Subscriptions.selectedObjectId.subscribe((id: number) => {
       console.error('id is: ' + id);
+    });
+
+    Subscriptions.mouseClick.subscribe((mouseClickPosition: THREE.Vector3) => {
+      // custom draw if enabled
+      this.drawCustomShape(mouseClickPosition);
     });
   }
 
@@ -95,21 +104,80 @@ export class SceneManager {
     }
   }
 
-  public createShape(): void {
+  public createShape(points?: THREE.Vector3[]): void {
     if (this.activeScene) {
 
-      // test
-      const points: number[][] = [
-        [0, 0], [0, 12], [6, 18], [12, 12], [12, 0]
-      ];
-      const s: Shape2D = new Shape2D(points);
-      s.mesh.position.x = this.children.length * 10;
-      this.shapes.push(s);
-      this.addToScene(s);
+      if (points) {
+
+        const shape: Shape2D = new Shape2D(points);
+        this.addShape(shape);
+
+      } else {
+
+        // for debugging only
+        // test shape when no params are passd in and increment each new shape every 10 units apart
+        const jsonPoints = [
+          { x: 0, y: 0, z: 0 },
+          { x: 0, y: 12, z: 0 },
+          { x: 6, y: 18, z: 0 },
+          { x: 12, y: 12, z: 0 },
+          { x: 12, y: 0, z: 0 },
+        ];
+
+        const points: THREE.Vector3[] = VectorUtils.convertJsonArrayToVec3s(jsonPoints);
+        const s: Shape2D = new Shape2D(points);
+        s.mesh.position.x = this.children.length * 10;
+        this.addShape(s);
+
+      }
 
     } else {
       console.warn('activeScene is null');
     }
+  }
+
+  /**
+   * Add shape to shapes array and to the scene.
+   * 
+   * @private
+   * @param {Shape} shape 
+   * @memberof SceneManager
+   */
+  private addShape(shape: Shape): void {
+    if (this.shapes) {
+      this.shapes.push(shape);
+      this.addToScene(shape);
+    } else {
+      console.warn('failed to add shape, shape is null');
+    }
+  }
+
+  /**
+   * When custom draw is enabled, every 3 clicks will create a square
+   * 
+   * @private
+   * @param {THREE.Vector3} mouseClickPosition 
+   * @memberof SceneManager
+   */
+  private drawCustomShape(mouseClickPosition: THREE.Vector3): void {
+    const maxClick: number = 4;
+    if (this.isCustomDrawEnabled) {
+      if (this.newCustomShapePoints && this.newCustomShapePoints.length < maxClick) {
+        this.newCustomShapePoints.push(mouseClickPosition);
+      
+        if (this.newCustomShapePoints.length >= maxClick) {
+          // draw the shape
+          this.createShape(this.newCustomShapePoints);
+          this.newCustomShapePoints = []; // reset
+          this.setCustomDraw(false);  // turn off
+        }
+        
+      }
+    } // custom draw is not enabled, do nothing
+  }
+
+  public setCustomDraw(value: boolean): void {
+    this.isCustomDrawEnabled = value;
   }
 
   public removeLastShape(): void {

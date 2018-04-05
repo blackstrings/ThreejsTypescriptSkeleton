@@ -12,6 +12,9 @@ export class Debug {
    */
   public message: string = 'Debug On: ';
   
+  // defaults
+  public forceEnableCameraRotation: boolean = false;
+  
   constructor(public enabled: boolean = false, message?: string) {
     if (message) {
       this.message = message;

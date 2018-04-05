@@ -13,13 +13,13 @@ import { Operation } from '../services/Operation';
  * @class UIManager
  */
 export class UIManager {
-  
+
   private panels: Panel[] = [];
   private dom: HTMLElement = null;
-  
+
   public static createNewShapePub: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
-  
-  
+
+
   constructor(uiDom: HTMLElement, private operation: Operation) {
     if (uiDom) {
       this.dom = document.createElement('div');
@@ -30,29 +30,35 @@ export class UIManager {
     } else {
       throw new Error('UIManager failed to create, rootDom is null');
     }
-    
+
   }
-  
+
   private init(): void {
     // panel
     const panel: Panel = new Panel('topPanel');
     this.addPanel(panel);
-    
+
     // button
     let btn: Button = new Button('btn', 'New Shape');
     panel.add(btn);
     btn.dom.addEventListener('click', () => {
       this.operation.createShape();
     });
-    
+
     btn = new Button('btn', 'Remove Last Shape');
     panel.add(btn);
     btn.dom.addEventListener('click', () => {
       this.operation.removeLastShape();
     });
-    
+
+    btn = new Button('btn', 'Draw Custom Shape');
+    panel.add(btn);
+    btn.dom.addEventListener('click', () => {
+      this.operation.enableCustomDraw();
+    });
+
   }
-  
+
   public addPanel(panel: Panel): void {
     if (this.panels) {
       this.panels.push(panel);
@@ -61,7 +67,7 @@ export class UIManager {
       console.error('failed to add panel, panels is null');
     }
   }
-  
+
   public removePanel(panel: Panel): void {
     if (this.panels) {
       const index: number = this.panels.indexOf(panel);

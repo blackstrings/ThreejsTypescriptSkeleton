@@ -21,10 +21,10 @@ export class Shape2D extends Shape{
 
   public mesh: THREE.Mesh = null;
 
-  constructor(points: Array<ArrayLike<number>>) {
+  constructor(points: THREE.Vector3[]) {
     super();
     try {
-      this.points = VectorUtils.convertArrayToVec3s(points);
+      this.points = points;
       this.create();
     } catch (e) {
       throw e;
@@ -32,17 +32,17 @@ export class Shape2D extends Shape{
   }
 
   /**
-   * Creates the shape2d mesh and returns it.
+   * Creates the shape2d mesh and returns it based on this.points
    * 
    * @private
    * @memberof Shape
    */
   private create(): THREE.Mesh {
     if (this.points) {
-      const vec2s: THREE.Vector2[] = VectorUtils.convertVec3sToVec2s(this.points);
+      const vec2s: THREE.Vector2[] = VectorUtils.convertVec3sToVec2s(this.points);  // from 3d to 2d points
       const shape: THREE.Shape = new THREE.Shape(vec2s);
       const shapeGeo: THREE.ShapeGeometry = new THREE.ShapeGeometry(shape);
-      this.mesh = new THREE.Mesh(shapeGeo, new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+      this.mesh = new THREE.Mesh(shapeGeo, new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff }));
       this.mesh.name = 'shape'; // has to be a valid name for the selection manager to filter the geometry during mouse down to make it selectable
     } else {
       throw new Error('<< Shape >> mesh2D is null');

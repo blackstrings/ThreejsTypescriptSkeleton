@@ -40,6 +40,7 @@ export class SelectionManager {
    * @memberof SelectionManager
    */
   public static selectedObjectIdPub: ReplaySubject<number> = new ReplaySubject<number>(1);
+  public static mouseClickPub: ReplaySubject<THREE.Vector3> = new ReplaySubject<THREE.Vector3>(1);
   
   // lazy way - we would just create the obserable in this class, but we move the convention where the public observable subscription
   // is in RXJS class object - any class wish to subscribe to the publication, will have to import subscription
@@ -143,6 +144,10 @@ export class SelectionManager {
         if (this.debug && this.debug.enabled) {
           console.log(`${this.logPrefix} mouse down location:`);
           console.log(mouseDownPosition);
+          SelectionManager.mouseClickPub.next(this.mouse.mouseDownPosition);
+          
+          // send information to any class that wishes to listen to mouse click locations
+          
         }
       }
 

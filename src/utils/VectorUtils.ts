@@ -48,4 +48,14 @@ export class VectorUtils {
     }
     return vec3s;
   }
+  
+  public static convertJsonArrayToVec3s(points: { x: number, y: number, z: number }[]): THREE.Vector3[] {
+    const vec3s: THREE.Vector3[] = [];
+    if (points) {
+      points.forEach((point: { x: number, y: number, z: number }) => {
+        vec3s.push(new THREE.Vector3(point.x, point.y, point.z));
+      });
+    }
+    return vec3s;
+  }
 }
