@@ -109,20 +109,30 @@ export class MovementManager {
       const intersection: THREE.Vector3 = new THREE.Vector3();
 
       // tell the ray caster to use the plane for finding intersection points
-      if (this.raycaster.ray.intersectPlane(this.plane, intersection) && this.mouse.mouseDownPosition) {
+      const mouseDownPosition: THREE.Vector3 = this.mouse.mouseDownPosition;
+      if (this.raycaster.ray.intersectPlane(this.plane, intersection) && mouseDownPosition) {
 
+        // const offset: THREE.Vector3 = new THREE.Vector3();
+        // offset.subVectors(intersection.clone(),mouseDownPosition.clone());
+        
 
-        const diff: THREE.Vector3 = intersection.clone().sub(this.mouse.mouseDownPosition.clone());
+        const diff: THREE.Vector3 = new THREE.Vector3();
+        diff.subVectors(intersection.clone(), mouseDownPosition.clone());
 
         // move to new location
+        var w1: THREE.Vector3 = this.selectedShape.mesh.parent.localToWorld(mouseDownPosition.clone());
+        var w2: THREE.Vector3 = w1.add(diff);
+        const newWorldToLocal: THREE.Vector3 = this.selectedShape.mesh.parent.worldToLocal(w2);
+        
         const newWorldPos: THREE.Vector3 = this.selectedShape.mesh.position.clone().add(diff);
         const newLocalPos: THREE.Vector3 = this.selectedShape.mesh.parent.worldToLocal(newWorldPos.clone());
 
+        // seem really close, just need to offset from the intersection
         // we only move in the direction of y when it comes to local movement so only update the y coordinate
         this.selectedShape.mesh.position.set(
-          diff.x,
-          diff.y, 
-          diff.z
+          intersection.x,
+          intersection.y,
+          intersection.z
         );
         
         
