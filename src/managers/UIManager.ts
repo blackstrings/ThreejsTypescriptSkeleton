@@ -57,6 +57,14 @@ export class UIManager {
       this.operation.enableCustomDraw();
     });
 
+    btn = new Button('btn', 'Edit');
+    panel.add(btn);
+    btn.dom.addEventListener('click', () => {
+      this.operation.enableShapeEdit();
+    });
+    
+    
+
   }
 
   public addPanel(panel: Panel): void {

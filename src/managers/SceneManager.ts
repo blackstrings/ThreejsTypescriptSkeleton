@@ -15,6 +15,7 @@ export class SceneManager {
   private shapes: Shape[] = [];
 
   private isCustomDrawEnabled: boolean = false;
+  private isShapeEditEnabled: boolean = false;
   private newCustomShapePoints: THREE.Vector3[] = [];
 
   constructor() {
@@ -23,7 +24,6 @@ export class SceneManager {
     this.children = this.activeScene.children;
     this.showGrid();
     this.showAxisHelper();
-    this.testScene();
 
     // TODO: remove this working subscription test with rxjs
     Subscriptions.selectedObjectId.subscribe((id: number) => {
@@ -117,16 +117,22 @@ export class SceneManager {
         // for debugging only
         // test shape when no params are passd in and increment each new shape every 10 units apart
         const jsonPoints = [
-          { x: 0, y: 0, z: 0 },
-          { x: 0, y: 12, z: 0 },
-          { x: 6, y: 18, z: 0 },
+          { x: -12, y: 12, z: 0 },
           { x: 12, y: 12, z: 0 },
-          { x: 12, y: 0, z: 0 },
+          { x: 12, y: -12, z: 0 },
+          { x: -12, y: -12, z: 0 }
         ];
+        // const jsonPoints = [
+        //   { x: 0, y: 0, z: 0 },
+        //   { x: 0, y: 12, z: 0 },
+        //   { x: 6, y: 18, z: 0 },
+        //   { x: 12, y: 12, z: 0 },
+        //   { x: 12, y: 0, z: 0 },
+        // ];
 
         const points: THREE.Vector3[] = VectorUtils.convertJsonArrayToVec3s(jsonPoints);
         const s: Shape2D = new Shape2D(points);
-        s.mesh.position.x = this.children.length * 10;
+        //s.mesh.position.x = this.children.length * 10;
         this.addShape(s);
 
       }
@@ -150,6 +156,23 @@ export class SceneManager {
     } else {
       console.warn('failed to add shape, shape is null');
     }
+  }
+  
+  public getShape(shapeId: number): Shape {
+    let shape: Shape = null;
+    if (this.shapes && this.shapes.length) {
+      
+      const shapes: Shape[] = this.shapes.filter((shape) => shape.mesh.id === shapeId);
+      if (shapes && shapes.length) {
+        shape = shapes[0];
+      } else {
+        console.warn(`failed to get shape of id ${shapeId}`);
+      }
+      
+    } else {
+      console.warn('failed to get shape, shapes is null or empty');
+    }
+    return shape;
   }
 
   /**
@@ -179,6 +202,10 @@ export class SceneManager {
   public setCustomDraw(value: boolean): void {
     this.isCustomDrawEnabled = value;
   }
+  
+  public setShapeEdit(value: boolean): void {
+    this.isShapeEditEnabled = value;
+  }
 
   public removeLastShape(): void {
     if (this.shapes && this.shapes.length && this.activeScene) {
@@ -187,23 +214,6 @@ export class SceneManager {
     } else {
       console.warn('failed to remove last shape, shapes or activeScene is null');
     }
-  }
-
-  private testScene(): void {
-    const mat: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: .6 });
-
-    // sphere
-    // const sGeo: THREE.SphereGeometry = new THREE.SphereGeometry(5);
-    // const sphereMesh: THREE.Mesh = new THREE.Mesh(sGeo, mat);
-    // sphereMesh.name = 'sphere';
-    // this.activeScene.add(sphereMesh);
-
-    // // cube
-    // const cubeGeo: THREE.CubeGeometry = new THREE.CubeGeometry(12, 2, 12);
-    // const cubeMesh: THREE.Mesh = new THREE.Mesh(cubeGeo, mat);
-    // this.activeScene.add(cubeMesh);
-    // cubeMesh.name = 'cube';
-
   }
 
   public getActiveScene(): THREE.Scene {

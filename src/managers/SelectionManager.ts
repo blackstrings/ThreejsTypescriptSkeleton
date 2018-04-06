@@ -40,6 +40,10 @@ export class SelectionManager {
    * @memberof SelectionManager
    */
   public static selectedObjectIdPub: ReplaySubject<number> = new ReplaySubject<number>(1);
+  
+  // avoid publishing the object
+  // public static selectedObjectPub: ReplaySubject<THREE.Object3D> = new ReplaySubject<THREE.Object3D>(1);
+  
   public static mouseClickPub: ReplaySubject<THREE.Vector3> = new ReplaySubject<THREE.Vector3>(1);
   
   // lazy way - we would just create the obserable in this class, but we move the convention where the public observable subscription
@@ -155,6 +159,9 @@ export class SelectionManager {
 
       if (selectedObject) {
 
+        // avoid publishing the object
+        // SelectionManager.selectedObjectPub.next(selectedObject);
+        
         // this is ony when you have nested objects and wish to select an object passively rather than directly
         // if the selected object carries userData, use the id from the userData instead
         // this is the case where a empty mesh has a background mesh as a child, and we are using the background mesh as the click region
@@ -169,6 +176,7 @@ export class SelectionManager {
           //console.log(`selected object id: ${selectedObject.id}`);
           //this._selectedThreeJSObjectId.next(selectedObject.id);
         }
+        
       }
     }
   }

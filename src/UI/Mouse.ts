@@ -56,12 +56,13 @@ export class Mouse {
     protected cameraManager: CameraManager
   ) {
 
-    this.canvasManager.rendererDomParent.addEventListener('mousemove', (event: MouseEvent) => {
-      if (this.debug && this.debug.enabled) {
+
+    if (this.debug && this.debug.enabled && this.debug.mouseMoveLog) {
+      this.canvasManager.rendererDomParent.addEventListener('mousemove', (event: MouseEvent) => {
         this.onMouseMove(event);
-      }
-    }, false);
-    
+      }, false);
+    }
+
     // subscription
     Subscriptions.debugSetupComplete.subscribe((debug: Debug) => {
       this.debug = debug;
@@ -212,7 +213,7 @@ export class Mouse {
     if (this.debug && this.debug.enabled) {
       console.warn(this.debug.message + "mouse move is activated");
       // document.getElementById('diddContainer').style.cursor = 'pointer'; // Uncomment to change cursor to pointer
-      
+
       /*
       if (this._isMouseIndicatorEnabled && this.debug.enabled) {
   

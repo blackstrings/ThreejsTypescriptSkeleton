@@ -26,4 +26,8 @@ export class Operation {
   public enableCustomDraw(): void {
     this.sceneManager.setCustomDraw(true);
   }
+  
+  public enableShapeEdit(): void {
+    this.sceneManager.setShapeEdit(true);
+  }
 }

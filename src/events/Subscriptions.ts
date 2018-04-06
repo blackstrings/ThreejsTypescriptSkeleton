@@ -15,11 +15,13 @@ import { UIManager } from '../managers/UIManager';
 export class Subscriptions {
 
 
-  public static selectedObjectId: Observable<number> = SelectionManager.selectedObjectIdPub.asObservable();
+  public static selectedObjectId: Observable<number> = SelectionManager.selectedObjectIdPub.asObservable(); // selected object id
   
-  public static mouseClick: Observable<THREE.Vector3> = SelectionManager.mouseClickPub.asObservable();
-  public static rendererSetupComplete: Observable<HTMLElement> = RenderManager.rendererSetupComplete.asObservable();
-  public static debugSetupComplete: Observable<Debug> = Debug.debugSetupComplete.asObservable();
+  public static mouseClick: Observable<THREE.Vector3> = SelectionManager.mouseClickPub.asObservable();  // mouse down position
   
-  public static createNewShape: Observable<Boolean> = UIManager.createNewShapePub.asObservable();
+  
+  public static rendererSetupComplete: Observable<HTMLElement> = RenderManager.rendererSetupComplete.asObservable();  // renderer parent dom
+  public static debugSetupComplete: Observable<Debug> = Debug.debugSetupComplete.asObservable();  // debugger setup
+  
+  public static createNewShape: Observable<Boolean> = UIManager.createNewShapePub.asObservable(); // create new shape
 }
