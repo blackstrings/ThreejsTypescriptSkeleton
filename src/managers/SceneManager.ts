@@ -25,11 +25,6 @@ export class SceneManager {
     this.showGrid();
     this.showAxisHelper();
 
-    // TODO: remove this working subscription test with rxjs
-    Subscriptions.selectedObjectId.subscribe((id: number) => {
-      console.error('id is: ' + id);
-    });
-
     Subscriptions.mouseClick.subscribe((mouseClickPosition: THREE.Vector3) => {
       // custom draw if enabled
       this.drawCustomShape(mouseClickPosition);

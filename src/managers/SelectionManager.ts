@@ -145,6 +145,7 @@ export class SelectionManager {
       const mouseDownPosition: THREE.Vector3 = new THREE.Vector3();
       if (this.raycaster.ray.intersectPlane(this.plane, mouseDownPosition)) {
         this.mouse.mouseDownPosition = VectorUtils.toFixed(mouseDownPosition);
+
         if (this.debug && this.debug.enabled) {
           console.log(`${this.logPrefix} mouse down location:`);
           console.log(mouseDownPosition);
@@ -156,8 +157,9 @@ export class SelectionManager {
       }
 
       const selectedObject = this.filterSelection();
-
       if (selectedObject) {
+        
+        SelectionManager.selectedObjectIdPub.next(selectedObject.id); // publish
 
         // avoid publishing the object
         // SelectionManager.selectedObjectPub.next(selectedObject);
@@ -236,9 +238,8 @@ export class SelectionManager {
       if (selectedObject) {
         // valid selections are geometry with valid names in the selectableGeometries array
         if (this.debug && this.debug.enabled) {
-          console.log('Selected geometry is a valid selection: ' + selectedObject.name);
+          console.log('Selected filtered geometry is a valid selection of name: ' + selectedObject.name);
         }
-        SelectionManager.selectedObjectIdPub.next(selectedObject.id); // publish
       } else {
         if (this.debug && this.debug.enabled) { console.log('No geometry selected or geometry is a invalid selection'); }
       }
