@@ -9,7 +9,7 @@ import { SceneManager } from './SceneManager';
 import { Debug } from '../utils/Debug';
 
 export class MovementManager {
-  
+
   private debug: Debug = null;
 
   public selectedShape: Shape;
@@ -38,11 +38,11 @@ export class MovementManager {
   private plane: THREE.Plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
 
   constructor(private canvasManager: CanvasManager, private cameraManager: CameraManager, private sceneManager: SceneManager, private mouse: Mouse) {
-    
+
     Subscriptions.debugSetupComplete.subscribe((debug: Debug) => {
       this.debug = debug;
     });
-    
+
     Subscriptions.selectedObjectId.subscribe((objectId: number) => {
       if (this.sceneManager) {
         const shape: Shape = this.sceneManager.getShape(objectId);
@@ -58,7 +58,7 @@ export class MovementManager {
         console.warn('failed to set selected shape, sceneManager is null');
       }
     });
-    
+
     this.activate();
   }
 
@@ -112,40 +112,39 @@ export class MovementManager {
       const mouseDownPosition: THREE.Vector3 = this.mouse.mouseDownPosition;
       if (this.raycaster.ray.intersectPlane(this.plane, intersection) && mouseDownPosition) {
 
-        // const offset: THREE.Vector3 = new THREE.Vector3();
-        // offset.subVectors(intersection.clone(),mouseDownPosition.clone());
-        
+        // find the offset/diff
+        // get the difference between the mouseDown location and the current mouse location
+        // Note: intersection and mouseDownPosition occurred on the same math plane, mathPlane sits in world space
+        // the diff is in world position
+        const diffWorld: THREE.Vector3 = new THREE.Vector3();
+        diffWorld.subVectors(intersection.clone(), mouseDownPosition.clone());
 
-        const diff: THREE.Vector3 = new THREE.Vector3();
-        diff.subVectors(intersection.clone(), mouseDownPosition.clone());
+        // get the shape's original local position and convert it to world position, so it be on the same local layer as the diff vector
+        // key here is to reference the selected shape's starting position in local space which should stay constant during mouse move
+        // use the shape's parent to convert its local position to world
+        var shapeOriginalPositionWorld: THREE.Vector3 = this.selectedShape.mesh.parent.localToWorld(this.mouse.shapeOriginPositionLocal.clone());
+        var newShapePositionWorld: THREE.Vector3 = shapeOriginalPositionWorld.add(diffWorld);
+        const newShapePositionLocal: THREE.Vector3 = this.selectedShape.mesh.parent.worldToLocal(newShapePositionWorld);
 
-        // // move to new location
-        // key here is to look at the original shape's starting position which should stay constant during mouse move
-        var w1: THREE.Vector3 = this.selectedShape.mesh.parent.localToWorld(this.mouse.shapeOriginPosition.clone());
-        var w2: THREE.Vector3 = w1.add(diff);
-        const newWorldToLocal: THREE.Vector3 = this.selectedShape.mesh.parent.worldToLocal(w2);
-        
-        
-        const newPos: THREE.Vector3 = this.selectedShape.mesh.position.clone().add(diff);
-        //const newWorldToLocal: THREE.Vector3 = this.selectedShape.mesh.parent.worldToLocal(w2);
-        
-        //const newWorldPos: THREE.Vector3 = this.selectedShape.mesh.position.clone().add(diff);
-        //const newLocalPos: THREE.Vector3 = this.selectedShape.mesh.parent.worldToLocal(newWorldPos.clone());
 
-        // seem really close, just need to offset from the intersection
-        // we only move in the direction of y when it comes to local movement so only update the y coordinate
-        this.selectedShape.mesh.position.set(
-          newWorldToLocal.x,
-          newWorldToLocal.y,
-          newWorldToLocal.z
-        );
-        
-        
-        
         // snapping
-        //Math.round(newLocalPos.y / this._snapValue) * this._snapValue,
+        const snapeValue: number = 12;
+        // snapping
+        // Math.round(newShapePositionLocal.y / snapeValue) * snapeValue;
 
-        //dragProxy.updateDragProxy(diff, selectedDragProxy);
+        // y snap only
+        // this.selectedShape.mesh.position.set(
+        //   newShapePositionLocal.x,
+        //   Math.round(newShapePositionLocal.y / snapeValue) * snapeValue,
+        //   newShapePositionLocal.z,
+        // );
+
+        // x and y snap
+        this.selectedShape.mesh.position.set(
+          Math.round(newShapePositionLocal.x / snapeValue) * snapeValue,
+          Math.round(newShapePositionLocal.y / snapeValue) * snapeValue,
+          newShapePositionLocal.z,
+        );
 
 
       }

@@ -5,9 +5,12 @@ import { Shape2D } from '../components/shapes/Shape2D';
 import { Subscriptions } from '../events/Subscriptions';
 import { Shape } from '../components/shapes/Shape';
 import { VectorUtils } from '../utils/VectorUtils';
+import { Subscription } from 'rxjs/Subscription';
+import { Debug } from '../utils/Debug';
 
 export class SceneManager {
 
+  private debug: Debug = null;
   private activeScene: THREE.Scene = null;
   private grid: Grid = null;
   public children: THREE.Object3D[];
@@ -28,6 +31,10 @@ export class SceneManager {
     Subscriptions.mouseClick.subscribe((mouseClickPosition: THREE.Vector3) => {
       // custom draw if enabled
       this.drawCustomShape(mouseClickPosition);
+    });
+    
+    Subscriptions.debugSetupComplete.subscribe((debug: Debug) => {
+      this.debug = debug;
     });
   }
 
@@ -106,9 +113,11 @@ export class SceneManager {
 
         const shape: Shape2D = new Shape2D(points);
         
-        // TODO used for debugging custom shapes
-        const axisHelper: THREE.AxesHelper = new THREE.AxesHelper(10);
-        shape.mesh.add(axisHelper);
+        // show shape position locaiton visually
+        if (this.debug && this.debug.enabled && this.debug.showShapePosition) {
+          const axisHelper: THREE.AxesHelper = new THREE.AxesHelper(10);
+          shape.mesh.add(axisHelper);
+        }
         
         this.addShape(shape);
 

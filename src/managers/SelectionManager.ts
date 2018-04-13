@@ -160,10 +160,10 @@ export class SelectionManager {
       if (selectedObject) {
         
         // store the offset from mouse click location to mesh origin position - for later moving so shape don't jump
-        this.mouse.shapeOriginPosition.copy(selectedObject.position.clone());
+        this.mouse.shapeOriginPositionLocal.copy(selectedObject.position.clone());
         SelectionManager.selectedObjectIdPub.next(selectedObject.id); // publish
 
-        // avoid publishing the object
+        // avoid publishing the object, do the id instead
         // SelectionManager.selectedObjectPub.next(selectedObject);
         
         // this is ony when you have nested objects and wish to select an object passively rather than directly
