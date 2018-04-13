@@ -120,6 +120,7 @@ export class MovementManager {
         diff.subVectors(intersection.clone(), mouseDownPosition.clone());
 
         // // move to new location
+        // key here is to look at the original shape's starting position which should stay constant during mouse move
         var w1: THREE.Vector3 = this.selectedShape.mesh.parent.localToWorld(this.mouse.shapeOriginPosition.clone());
         var w2: THREE.Vector3 = w1.add(diff);
         const newWorldToLocal: THREE.Vector3 = this.selectedShape.mesh.parent.worldToLocal(w2);
