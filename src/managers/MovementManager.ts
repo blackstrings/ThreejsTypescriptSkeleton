@@ -119,20 +119,24 @@ export class MovementManager {
         const diff: THREE.Vector3 = new THREE.Vector3();
         diff.subVectors(intersection.clone(), mouseDownPosition.clone());
 
-        // move to new location
-        var w1: THREE.Vector3 = this.selectedShape.mesh.parent.localToWorld(mouseDownPosition.clone());
+        // // move to new location
+        var w1: THREE.Vector3 = this.selectedShape.mesh.parent.localToWorld(this.mouse.shapeOriginPosition.clone());
         var w2: THREE.Vector3 = w1.add(diff);
         const newWorldToLocal: THREE.Vector3 = this.selectedShape.mesh.parent.worldToLocal(w2);
         
-        const newWorldPos: THREE.Vector3 = this.selectedShape.mesh.position.clone().add(diff);
-        const newLocalPos: THREE.Vector3 = this.selectedShape.mesh.parent.worldToLocal(newWorldPos.clone());
+        
+        const newPos: THREE.Vector3 = this.selectedShape.mesh.position.clone().add(diff);
+        //const newWorldToLocal: THREE.Vector3 = this.selectedShape.mesh.parent.worldToLocal(w2);
+        
+        //const newWorldPos: THREE.Vector3 = this.selectedShape.mesh.position.clone().add(diff);
+        //const newLocalPos: THREE.Vector3 = this.selectedShape.mesh.parent.worldToLocal(newWorldPos.clone());
 
         // seem really close, just need to offset from the intersection
         // we only move in the direction of y when it comes to local movement so only update the y coordinate
         this.selectedShape.mesh.position.set(
-          intersection.x,
-          intersection.y,
-          intersection.z
+          newWorldToLocal.x,
+          newWorldToLocal.y,
+          newWorldToLocal.z
         );
         
         

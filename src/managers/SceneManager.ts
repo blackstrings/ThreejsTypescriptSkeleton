@@ -105,6 +105,11 @@ export class SceneManager {
       if (points) {
 
         const shape: Shape2D = new Shape2D(points);
+        
+        // TODO used for debugging custom shapes
+        const axisHelper: THREE.AxesHelper = new THREE.AxesHelper(10);
+        shape.mesh.add(axisHelper);
+        
         this.addShape(shape);
 
       } else {

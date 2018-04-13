@@ -12,29 +12,9 @@ export class Debug {
    */
   public message: string = 'Debug On: ';
 
-  /**
-   * All active cameras will have rotation enabeled
-   * 
-   * @type {boolean}
-   * @memberof Debug
-   */
-  public forceEnableCameraRotation: boolean = false;
-
-  /**
-   * Mouse will log all movements
-   * 
-   * @type {boolean}
-   * @memberof Debug
-   */
-  public mouseMoveLog: boolean = false;
-
-  /**
-   * Movement manager will log selected shape
-   * 
-   * @type {boolean}
-   * @memberof Debug
-   */
-  public selectedShapeLog: boolean = true;
+  public forceEnableCameraRotation: boolean = false;  // All active cameras will have rotation enabeled
+  public mouseMoveLog: boolean = true;               // Mouse will log all movements
+  public selectedShapeLog: boolean = true;            // Movement manager will log selected shape
 
   constructor(public enabled: boolean = false, message?: string) {
     if (message) {

@@ -43,6 +43,9 @@ export class Mouse {
    * @memberof Mouse
    */
   public mouseDownPosition: THREE.Vector3;
+  
+  // store the shape origin position on first mouse down - for later use with moving
+  public shapeOriginPosition: THREE.Vector3 = new THREE.Vector3();
 
   /**
    * Creates the instance of Mouse, an injectable service used by the SelectionManager and MovementManager
@@ -210,11 +213,10 @@ export class Mouse {
    */
   private onMouseMove(event: MouseEvent): void {
     // TODO: turn off for now
-    if (this.debug && this.debug.enabled) {
+    if (this.debug && this.debug.enabled && this.debug.mouseMoveLog) {
       console.warn(this.debug.message + "mouse move is activated");
       // document.getElementById('diddContainer').style.cursor = 'pointer'; // Uncomment to change cursor to pointer
 
-      /*
       if (this._isMouseIndicatorEnabled && this.debug.enabled) {
   
         this.update(event);
@@ -227,7 +229,7 @@ export class Mouse {
           this.pointCloud.verticesNeedUpdate = true;
         }
       }
-      */
+
     }
   }
 

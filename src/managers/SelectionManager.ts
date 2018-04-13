@@ -159,6 +159,8 @@ export class SelectionManager {
       const selectedObject = this.filterSelection();
       if (selectedObject) {
         
+        // store the offset from mouse click location to mesh origin position - for later moving so shape don't jump
+        this.mouse.shapeOriginPosition.copy(selectedObject.position.clone());
         SelectionManager.selectedObjectIdPub.next(selectedObject.id); // publish
 
         // avoid publishing the object
